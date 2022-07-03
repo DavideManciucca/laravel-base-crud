@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Comic;
+use Illuminate\Support\Str;
 
 class ComicController extends Controller
 {
@@ -14,7 +15,7 @@ class ComicController extends Controller
      */
     public function index()
     {
-        $comics = Comic::all();
+        $comics = Comic::orderBy('id','desc')->get();
         // dump($comics);
         return view('comics.index', compact('comics'));
     }
@@ -26,7 +27,7 @@ class ComicController extends Controller
      */
     public function create()
     {
-        //
+        return view('comics.create');
     }
 
     /**
@@ -37,7 +38,20 @@ class ComicController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dump($request->all());
+        $data=$request->all();
+        $new_comic= new Comic();
+        // $new_comic->title=$data['title'];
+        // $new_comic->type=$data['type'];
+        // $new_comic->image=$data['image'];
+        // $new_comic->slug=Str::slug($data['title'],'-');
+        $data['slug'] = Str::slug($data['title'],'-');
+        $new_comic->fill($data);
+        $new_comic->save();
+
+        return redirect()->route('comics.show',$new_comic);
+        // $new_comic->save();
+
     }
 
     /**
@@ -49,8 +63,11 @@ class ComicController extends Controller
     public function show($id)
     {
         $comic = Comic::find($id);
-        return view('comics.show',compact('comic'));
-        dd($id);
+        if($comic){
+            return view('comics.show',compact('comic'));
+        }
+        abort(404,'Pagina non trovata');
+        // dd($id);
     }
 
     /**
@@ -61,7 +78,11 @@ class ComicController extends Controller
      */
     public function edit($id)
     {
-        //
+        $comic = Comic::find($id);
+        if($comic){
+            return view('comics.edit', compact('comic'));
+        }
+        abort(404,'Pagina non trovata');
     }
 
     /**
@@ -71,9 +92,13 @@ class ComicController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Comic $comic)
     {
-        //
+
+        $data = $request->all();
+        $data['slug']=Str::slug($data['title'],'-');
+        $comic->update($data);
+        return redirect()->route('comics.show', $comic);
     }
 
     /**
@@ -82,8 +107,9 @@ class ComicController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Comic $comic)
     {
-        //
+        $comic->delete();
+        return redirect()->route('comics.index');
     }
 }
