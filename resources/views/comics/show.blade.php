@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-       <h1>{{$comic->title}} <a class="btn btn-primary" href="{{route('comics.edit')}}">EDIT</a></h1>
+       <h1>{{$comic->title}} <a class="btn btn-primary" href="{{route('comics.edit', $comic)}}">EDIT</a></h1>
        <div>
         Type:{{$comic->type}}
        </div>

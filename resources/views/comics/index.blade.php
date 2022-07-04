@@ -22,8 +22,8 @@
                 <td>{{$comic->title}}</td>
                 <td>{{$comic->type}}</td>
                 <td>
-                    <a class="btn btn-success" href="{{route('comics.show',$comic)}}">SHOW</a>
-                    <a class="btn btn-primary" href="{{route('comics.edit',$comic)}}">EDIT</a>
+                    <a class="btn btn-success" href="{{route('comics.show', $comic)}}">SHOW</a>
+                    <a class="btn btn-primary" href="{{route('comics.edit', $comic)}}">EDIT</a>
                     <form onsubmit="return confirm('vuoi eliminare il campo?')" class="d-inline" action="{{route('comics.destroy',$comic)}}" method="POST">
                     @csrf @method('DELETE')
                     <button type="submit" class="btn btn-danger" >DELETE</a>

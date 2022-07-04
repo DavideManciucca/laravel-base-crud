@@ -38,6 +38,22 @@ class ComicController extends Controller
      */
     public function store(Request $request)
     {
+
+        $request->validate([
+            "title"=>"required|max:255|min:3",
+            "type"=>"required|max:50|min:3",
+        ],
+        [
+            "title.required"=>"Devi inserire un titolo!",
+            "title.max"=>"Il titolo non può essere più lungo di :max caratteri!",
+            "title.min"=>"Il titolo non può essere più corto di :min caratteri!",
+            "type.required"=>"Devi specificare la categoria!",
+            "type.max"=>"La categoria non può essere più lunga di :max caratteri!",
+            "type.min"=>"La categoria non può essere più corta di :min caratteri!",
+
+        ]
+
+        );
         // dump($request->all());
         $data=$request->all();
         $new_comic= new Comic();
@@ -64,9 +80,9 @@ class ComicController extends Controller
     {
         $comic = Comic::find($id);
         if($comic){
-            return view('comics.show',compact('comic'));
+            return view('comics.show', compact('comic'));
         }
-        abort(404,'Pagina non trovata');
+        abort(404, 'Pagina non trovata');
         // dd($id);
     }
 
